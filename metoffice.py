@@ -5,7 +5,7 @@ import json
 
 base_url = 'http://datapoint.metoffice.gov.uk/public/data/'
 key = '<SECRET_KEY_HERE>'
-lid = '352877' #  weather station id
+lid = '<MET_OFFICE_WEATHER_STATION_ID>'
 
 # F: Feels like temperature
 # U: Max UV index
@@ -82,22 +82,13 @@ def getForecasts():
   if r.status_code != 200: return
   return r.json()
 
-def getForecast():
-  day_forecasts = getForecasts()['SiteRep']['DV']['Location']['Period']
-  first_forecast = day_forecasts[0]['Rep'][1]
-  t = minutesToHours(first_forecast['$'])
-  w = WEATHER_TYPES[first_forecast['W']]
-  p = first_forecast['Pp'] + '%'
-  f = first_forecast['F'] + 'C'  
-  return (t, w, p, f)
-
 def getDayRecords():
   start_daytime = datetime.strptime('06:00','%H:%M').time()
   end_daytime = datetime.strptime('18:00','%H:%M').time()
   day_forecasts = getForecasts()['SiteRep']['DV']['Location']['Period']
   out = []
   record_count = 0
-  for forecast in day_forecasts:  # go thru each of five days
+  for forecast in day_forecasts:  # go through each of five days
     date = forecast['value']      # get the date
     for rep in forecast['Rep']:   # get the actual forecast data for each time
       dt_obj = datetime.strptime(f'{date}{minutesToHours(rep["$"])}+0000', f'%Y-%m-%dZ%H:%M%z')
@@ -113,21 +104,6 @@ def getDayRecords():
             'isDay': is_day,
             'rec': rep
           })
-  return out
-
-def getFullDayTemps( recs ):
-  temp_list = [int(rec['rec']['F']) for rec in recs] # feels like temp
-  max_temp = max(temp_list) + 1
-  min_temp = min(temp_list) - 1
-  range_temp = max_temp - min_temp
-  out = []
-  for i in range(len(recs)):
-    temp = ( temp_list[i] - min_temp ) / range_temp # adjusted to percentage
-    is_day = recs[i]['isDay']
-    out.append({
-      't': temp,
-      'is_day': is_day
-    })
   return out
 
 def getIcon( w, isday ):

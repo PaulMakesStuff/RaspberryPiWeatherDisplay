@@ -1,5 +1,5 @@
 from infowindow import InfoWindow
-from metoffice import getForecast, getFullDayTemps, getDayRecords, weatherType, getIcon
+from metoffice import getDayRecords, weatherType, getIcon
 from datetime import datetime
 import json
 
@@ -64,6 +64,6 @@ def displayWeather():
     iw.text(196, ppy, f"{recs[5]['forecast']['Pp']}%", 'chikarego20', 1, "mt")
     iw.text(231, ppy, f"{recs[6]['forecast']['Pp']}%", 'chikarego20', 1, "mt")
 
-    # display the image on the display, or save to a file if on pc.
+    # display the image on the display
 
     iw.displayImage()

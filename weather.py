@@ -27,10 +27,6 @@ def displayWeather():
     weather_desc = weatherType(weather_int)
     icon_name = weather_desc.replace(' ', '').lower() + '.bmp'
 
-    # for a bit of debugging, save the information to the file.
-    with open('24hrforecast.json', 'w') as f:
-        f.write(json.dumps(recs, indent=2, sort_keys=True, default=str))
-
     # display the weather icon, and description.
     iw.text(20, tim, recs[0]['time'], 'chikarego16', 1, "mt")
     iw.text(56, tim, recs[1]['time'], 'chikarego16', 1, "mt")
